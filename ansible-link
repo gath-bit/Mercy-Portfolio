@@ -1,0 +1,46 @@
+---
+- name: Configure Nginx Web Server
+  hosts: webserver
+  become: yes  # Use sudo to execute tasks
+
+  tasks:
+    - name: Update apt package cache
+      apt:
+        update_cache: yes
+      tags:
+        - update
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+      tags:
+        - install
+
+    - name: Start Nginx service
+      service:
+        name: nginx
+        state: started
+      tags:
+        - start
+
+    - name: Enable Nginx service at boot
+      service:
+        name: nginx
+        enabled: yes
+      tags:
+        - enable
+
+    - name: Copy Nginx configuration file
+      copy:
+        src: /path/to/nginx.conf  # Replace with the source configuration file
+        dest: /etc/nginx/nginx.conf
+      notify: Reload Nginx
+      tags:
+        - configure
+
+  handlers:
+    - name: Reload Nginx
+      service:
+        name: nginx
+        state: reloaded

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Define variables
+APP_NAME="my-application"
+DEPLOY_DIR="/opt/$APP_NAME"
+BACKUP_DIR="/opt/$APP_NAME/backups"
+USER="deploy-user"
+SERVICE_NAME="my-application-service"
+
+# Check if a backup exists
+if [ -d "$BACKUP_DIR" ]; then
+  # Stop the application service
+  sudo systemctl stop $SERVICE_NAME
+
+  # Restore the previous deployment from the backup
+  sudo rm -rf $DEPLOY_DIR
+  sudo cp -r $BACKUP_DIR $DEPLOY_DIR
+
+  # Start the application service
+  sudo systemctl start $SERVICE_NAME
+
+  # Clean up backups (optional, retain some backups if needed)
+  sudo rm -rf $BACKUP_DIR
+
+  echo "Rollback to the previous version of $APP_NAME completed."
+else
+  echo "No backups found. Rollback not possible."
+fi

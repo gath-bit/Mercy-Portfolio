@@ -1,0 +1,63 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout your source code repository
+                // Use the appropriate SCM tool and repository URL
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Depending on your project, build your code here
+                // Example for a Maven-based Java project:
+                sh 'mvn clean install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Depending on your project, run tests here
+                // Example for JUnit tests:
+                sh 'mvn test'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // Depending on your project, deploy to the appropriate environment
+                // Example for deploying to a web server:
+                sh 'rsync -avz ./target/myapp.war user@server:/path/to/deployment/'
+            }
+        }
+
+        stage('Deploy to Production') {
+            when {
+                // Define conditions for deploying to production
+                // For example, deploy to production only for the master branch
+                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+            }
+            steps {
+                // Deploy to production here
+                // Example:
+                sh 'ssh user@production-server "deploy-script.sh"'
+            }
+        }
+    }
+
+    post {
+        success {
+            // Define post-build actions for success, e.g., notifications
+            // Example: send a Slack notification
+            slackSend(channel: '#my-project', message: 'Build successful!')
+        }
+        failure {
+            // Define post-build actions for failure, e.g., notifications
+            // Example: send a Slack notification
+            slackSend(channel: '#my-project', message: 'Build failed.')
+        }
+    }
+}

@@ -1,0 +1,44 @@
+---
+- name: Install Nginx
+  hosts: web_servers
+  become: yes
+
+  tasks:
+    - name: Update package cache
+      apt:
+        update_cache: yes
+      when: ansible_os_family == 'Debian'
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+      when: ansible_os_family == 'Debian'
+
+    - name: Start Nginx service
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+
+---
+- name: Deploy Docker Containers
+  hosts: app_servers
+  become: yes
+
+  tasks:
+    - name: Pull Docker image
+      docker_image:
+        name: your_app_image:latest
+        source: pull
+      register: docker_image_result
+
+    - name: Run Docker container
+      docker_container:
+        name: your_app_container
+        image: "{{ docker_image_result.image.id }}"
+        state: started
+        ports:
+          - "80:80"
+        restart_policy: always

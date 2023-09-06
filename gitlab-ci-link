@@ -1,0 +1,34 @@
+# Specify the GitLab CI/CD runner to use
+image: docker:latest
+
+# Define stages and jobs
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  # Define environment variables here, if needed
+  MY_ENV_VAR: "some_value"
+
+# Define jobs for each stage
+build:
+  stage: build
+  script:
+    - echo "Building the project..."
+    # Add commands to build your project here
+
+test:
+  stage: test
+  script:
+    - echo "Running tests..."
+    # Add commands to run tests here
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying the project..."
+    # Add commands to deploy your project here
+  only:
+    - master
+    # Define the branch where deployment should happen (e.g., master)

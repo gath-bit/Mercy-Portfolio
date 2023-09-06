@@ -1,0 +1,31 @@
+# Use an official base image
+FROM node:14
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy package.json and package-lock.json to the container
+COPY package*.json ./
+
+# Install application dependencies
+RUN npm install
+
+# Copy the rest of the application source code to the container
+COPY . .
+
+# Expose the port the application will run on
+EXPOSE 3000
+
+# Define the command to start the application
+CMD ["npm", "start"]
+
+
+
+# Navigate to the project directory
+cd /path/to/project
+
+# Build the Docker image
+docker build -t my-application-image .
+
+# Run the Docker container
+docker run -d -p 3000:3000 --name my-application-container my-application-image

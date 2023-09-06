@@ -1,0 +1,32 @@
+puppet_project/
+│
+├── manifests/
+│   ├── site.pp                      # Main manifest file
+│   ├── nodes/
+│   │   ├── production.pp            # Define production node
+│   │   └── staging.pp               # Define staging node
+│   └── ...
+│
+├── modules/
+│   ├── common/                      # Define common module
+│   │   ├── manifests/
+│   │   │   ├── init.pp              # Main manifest for the common module
+│   │   │   └── ...
+│   │   └── ...
+│   │
+│   ├── web_app/                     # Define a module for the web application
+│   │   ├── manifests/
+│   │   │   ├── init.pp              # Main manifest for the web_app module
+│   │   │   └── ...
+│   │   ├── templates/               # Templates for configuration files
+│   │   ├── files/                   # Static files used in the module
+│   │   └── ...
+│   │
+│   └── ...
+│
+├── hieradata/
+│   ├── common.yaml                  # Common variables
+│   ├── production.yaml              # Variables for production environment
+│   └── staging.yaml                 # Variables for staging environment
+│
+└── ...

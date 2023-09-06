@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-application-deployment
+  labels:
+    app: my-application
+spec:
+  replicas: 3  # Number of desired replicas
+  selector:
+    matchLabels:
+      app: my-application
+  template:
+    metadata:
+      labels:
+        app: my-application
+    spec:
+      containers:
+      - name: my-application-container
+        image: my-application-image:latest  # Update with your Docker image
+        ports:
+        - containerPort: 3000  # Port exposed by your container
+
+
+#service yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-application-service
+spec:
+  selector:
+    app: my-application
+  ports:
+    - protocol: TCP
+      port: 80  # Port to access the service
+      targetPort: 3000  # Port exposed by your container
+  type: LoadBalancer  # Change to ClusterIP for internal access
+
+
+
+# Apply the Deployment YAML
+kubectl apply -f deployment.yaml
+
+# Apply the Service YAML
+kubectl apply -f service.yaml
